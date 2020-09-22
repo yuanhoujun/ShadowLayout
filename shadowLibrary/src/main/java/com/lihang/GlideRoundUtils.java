@@ -1,17 +1,17 @@
 package com.lihang;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 /**
  * Created by leo
@@ -25,49 +25,29 @@ public class GlideRoundUtils {
                 view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                     @Override
                     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                        Glide.with(view)
-                                .asDrawable()
+                        Glide.with(view.getContext())
                                 .load(resourceId)
-                                .transform(new CenterCrop())
+                                .asBitmap()
+                                .centerCrop()
                                 .override(view.getMeasuredWidth(), view.getMeasuredHeight())
-                                .into(new CustomTarget<Drawable>() {
+                                .into(new SimpleTarget<Bitmap>() {
                                     @Override
-                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                                            view.setBackgroundDrawable(resource);
-                                        } else {
-                                            view.setBackground(resource);
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
+                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                        view.setBackground(new BitmapDrawable(view.getResources(), resource));
                                     }
                                 });
                     }
                 });
             } else {
-                Glide.with(view)
-                        .asDrawable()
+                Glide.with(view.getContext())
                         .load(resourceId)
-                        .transform(new CenterCrop())
+                        .asBitmap()
+                        .centerCrop()
                         .override(view.getMeasuredWidth(), view.getMeasuredHeight())
-                        .into(new CustomTarget<Drawable>() {
-                            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        .into(new SimpleTarget<Bitmap>() {
                             @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                                    view.setBackgroundDrawable(resource);
-                                } else {
-                                    view.setBackground(resource);
-                                }
-                            }
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                view.setBackground(new BitmapDrawable(view.getResources(), resource));
                             }
                         });
             }
@@ -78,47 +58,34 @@ public class GlideRoundUtils {
                 view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                     @Override
                     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                        Glide.with(view)
+                        Glide.with(view.getContext())
                                 .load(resourceId)
-                                .transform(new CenterCrop(), new RoundedCorners((int) cornerDipValue))
+                                .asBitmap()
+                                .centerCrop()
                                 .override(view.getMeasuredWidth(), view.getMeasuredHeight())
-                                .into(new CustomTarget<Drawable>() {
-                                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                                .into(new SimpleTarget<Bitmap>() {
                                     @Override
-                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                                            view.setBackgroundDrawable(resource);
-                                        } else {
-                                            view.setBackground(resource);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
+                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                        RoundedBitmapDrawable circularBitmapDrawable =
+                                                RoundedBitmapDrawableFactory.create(view.getResources(), resource);
+                                        circularBitmapDrawable.setCornerRadius(dp2px(view.getResources(), cornerDipValue));
+                                        view.setBackground(circularBitmapDrawable);
                                     }
                                 });
                     }
                 });
             } else {
-                Glide.with(view)
+                Glide.with(view.getContext())
                         .load(resourceId)
-                        .transform(new CenterCrop(), new RoundedCorners((int) cornerDipValue))
+                        .asBitmap()
                         .override(view.getMeasuredWidth(), view.getMeasuredHeight())
-                        .into(new CustomTarget<Drawable>() {
-                            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        .into(new SimpleTarget<Bitmap>() {
                             @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                                    view.setBackgroundDrawable(resource);
-                                } else {
-                                    view.setBackground(resource);
-                                }
-                            }
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(view.getResources(), resource);
+                                circularBitmapDrawable.setCornerRadius(dp2px(view.getResources(), cornerDipValue));
+                                view.setBackground(circularBitmapDrawable);
                             }
                         });
             }
@@ -134,45 +101,27 @@ public class GlideRoundUtils {
                 view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                     @Override
                     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                        Glide.with(view)
+                        Glide.with(view.getContext())
                                 .load(resourceId)
+                                .asBitmap()
                                 .override(view.getMeasuredWidth(), view.getMeasuredHeight())
-                                .into(new CustomTarget<Drawable>() {
-                                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                                .into(new SimpleTarget<Bitmap>() {
                                     @Override
-                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                                            view.setBackgroundDrawable(resource);
-                                        } else {
-                                            view.setBackground(resource);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
+                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                        view.setBackground(new BitmapDrawable(view.getResources(), resource));
                                     }
                                 });
                     }
                 });
             } else {
-                Glide.with(view)
+                Glide.with(view.getContext())
                         .load(resourceId)
+                        .asBitmap()
                         .override(view.getMeasuredWidth(), view.getMeasuredHeight())
-                        .into(new CustomTarget<Drawable>() {
-                            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        .into(new SimpleTarget<Bitmap>() {
                             @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                                    view.setBackgroundDrawable(resource);
-                                } else {
-                                    view.setBackground(resource);
-                                }
-                            }
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                view.setBackground(new BitmapDrawable(view.getResources(), resource));
                             }
                         });
             }
@@ -183,24 +132,15 @@ public class GlideRoundUtils {
                     @Override
                     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                         GlideRoundTransform transform = new GlideRoundTransform(view.getContext(), leftTop_corner, leftBottom_corner, rightTop_corner, rightBottom_corner);
-                        Glide.with(view)
+                        Glide.with(view.getContext())
                                 .load(resourceId)
+                                .asBitmap()
                                 .transform(transform)
                                 .override(view.getMeasuredWidth(), view.getMeasuredHeight())
-                                .into(new CustomTarget<Drawable>() {
-                                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                                .into(new SimpleTarget<Bitmap>() {
                                     @Override
-                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                                            view.setBackgroundDrawable(resource);
-                                        } else {
-                                            view.setBackground(resource);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
+                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                        view.setBackground(new BitmapDrawable(view.getResources(), resource));
                                     }
                                 });
                     }
@@ -208,24 +148,15 @@ public class GlideRoundUtils {
             } else {
 
                 GlideRoundTransform transform = new GlideRoundTransform(view.getContext(), leftTop_corner, leftBottom_corner, rightTop_corner, rightBottom_corner);
-                Glide.with(view)
+                Glide.with(view.getContext())
                         .load(resourceId)
+                        .asBitmap()
                         .transform(transform)
                         .override(view.getMeasuredWidth(), view.getMeasuredHeight())
-                        .into(new CustomTarget<Drawable>() {
-                            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        .into(new SimpleTarget<Bitmap>() {
                             @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                                    view.setBackgroundDrawable(resource);
-                                } else {
-                                    view.setBackground(resource);
-                                }
-                            }
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                view.setBackground(new BitmapDrawable(view.getResources(), resource));
                             }
                         });
 
@@ -233,6 +164,10 @@ public class GlideRoundUtils {
 
         }
 
+    }
+
+    private static float dp2px(Resources resources, float dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
     }
 
 }

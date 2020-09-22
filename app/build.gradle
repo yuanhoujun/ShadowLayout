@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.leo"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 3
         versionName "3.0.1"

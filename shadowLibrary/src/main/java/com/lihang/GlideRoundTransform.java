@@ -60,7 +60,7 @@ public class GlideRoundTransform implements Transformation<Bitmap> {
 
     @NonNull
     @Override
-    public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
+    public Resource<Bitmap> transform(@NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
 
         Bitmap source = resource.get();
         int finalWidth, finalHeight;
@@ -138,7 +138,8 @@ public class GlideRoundTransform implements Transformation<Bitmap> {
 
 
     @Override
-    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    public String getId() {
+        return null;
     }
 }
 
